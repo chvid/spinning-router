@@ -1,4 +1,7 @@
-import { test, beforeAll } from "@jest/globals";
+import React from "react";
+import renderer from "react-test-renderer";
+
+import { test } from "@jest/globals";
 
 import { matchRoute } from "./SpinningRouter";
 import { Routes } from "./Routes";
@@ -7,7 +10,7 @@ import { link } from "./link";
 const routes = [
   {
     path: "",
-    component: async () => <p />
+    component: async () => <p>root</p>
   },
   {
     path: ":id",
@@ -18,7 +21,7 @@ const routes = [
         routes: [
           {
             path: "",
-            component: async () => <p />
+            component: async () => <p>settings</p>
           }
         ]
       },
@@ -27,11 +30,11 @@ const routes = [
         routes: [
           {
             path: "invoices",
-            component: async () => <p /> // <InvoicesPage />,
+            component: async () => <p>invoices</p>
           },
           {
             path: "customers",
-            component: async () => <p /> // <CustomersPage />
+            component: async () => <p>customers</p>
           }
         ]
       }
@@ -40,12 +43,16 @@ const routes = [
 ] satisfies Routes;
 
 test("routes", async () => {
-  console.log("match empty string", await matchRoute(routes, ""));
-  console.log("match slash", await matchRoute(routes, "/"));
-  console.log("match /42/settings", await matchRoute(routes, "/42/settings"));
+  expect(renderer.create(await matchRoute(routes, "")).toJSON()).toEqual({ type: "p", props: {}, children: ["root"] });
+  expect(renderer.create(await matchRoute(routes, "/")).toJSON()).toEqual({ type: "p", props: {}, children: ["root"] });
+  expect(renderer.create(await matchRoute(routes, "/42/settings")).toJSON()).toEqual({
+    type: "p",
+    props: {},
+    children: [{ type: "p", props: {}, children: ["settings"] }]
+  });
 });
 
 test("link", async () => {
   const companyId = 42;
-  console.log("link", link`/${companyId}/hello`);
+  expect(link`/${companyId}/hello`).toEqual("#/42/hello");
 });
