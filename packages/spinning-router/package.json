@@ -1,0 +1,16 @@
+{
+  "name": "spinning-router",
+  "version": "0.0.1",
+  "description": "n/a",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "files": [
+    "/dist"
+  ],
+  "peerDependencies": {
+    "react": "^18.2.0 || >19"
+  }
+}
