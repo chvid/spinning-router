@@ -49,3 +49,27 @@ test("routes", async () => {
     </div>
   );
 });
+
+test("parameters", async () => {
+  expect(
+    await matchRoute(
+      [
+        {
+          path: ":a/:b",
+          component: async ({ a, b }) => (
+            <div>
+              <span>{a}</span>
+              <span>{b}</span>
+            </div>
+          )
+        }
+      ],
+      "/42/87"
+    )
+  ).toEqual(
+    <div>
+      <span>42</span>
+      <span>87</span>
+    </div>
+  );
+});

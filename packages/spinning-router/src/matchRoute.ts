@@ -25,8 +25,7 @@ const doMatchRoute: (routes: Routes, path: string[], parentParameters: Parameter
           children = await doMatchRoute(r.routes, path.slice(rPath.length), parameters);
         }
         if (r.component) {
-          parameters["children"] = children;
-          return r.component!(parameters);
+          return await r.component!({ ...parameters, children });
         } else {
           if (children) {
             return children;
@@ -40,7 +39,7 @@ const doMatchRoute: (routes: Routes, path: string[], parentParameters: Parameter
 
 export const matchRoute: (routes: Routes, path: string) => Promise<JSX.Element | undefined> = async (routes, path) => {
   try {
-    return doMatchRoute(
+    return await doMatchRoute(
       routes,
       path.split("/").filter(e => e != ""),
       {}
