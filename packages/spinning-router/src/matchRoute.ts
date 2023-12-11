@@ -9,21 +9,10 @@ const doMatchRoute: (routes: Routes, path: string[], parameters: { [key: string]
     const rPath = r.path.split("/").filter(e => e != "");
 
     if ((r.routes && rPath.length <= path.length) || rPath.length == path.length) {
-      let match = true;
-
-      for (let i in rPath) {
-        if (rPath[i].startsWith(":")) {
-          parameters[rPath[i].substring(1)] = decodeURIComponent(path[i]);
-        } else {
-          if (rPath[i] != path[i]) {
-            match = false;
-          }
-        }
-      }
-
-      if (match) {
-        let children = r.routes ? await doMatchRoute(r.routes, path.slice(rPath.length), parameters) : undefined;
-        return r.component ? await r.component!({ ...parameters, children }) : children;
+      if (rPath.every((e, i) => e.startsWith(":") || e == path[i])) {
+        const newParameters = Object.fromEntries(rPath.filter(e => e.startsWith(":")).map((e, i) => [e.substring(1), decodeURIComponent(path[i])]));
+        let children = r.routes ? await doMatchRoute(r.routes, path.slice(rPath.length), { ...parameters, ...newParameters }) : undefined;
+        return r.component ? await r.component!({ ...parameters, ...newParameters, children }) : children;
       }
     }
   }
