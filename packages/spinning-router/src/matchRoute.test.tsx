@@ -4,6 +4,7 @@ import { test } from "@jest/globals";
 
 import { matchRoute } from "./matchRoute";
 import { Routes } from "./Routes";
+import { link } from "./link";
 
 const routes = [
   {
@@ -72,4 +73,8 @@ test("parameters", async () => {
       <span>87</span>
     </div>
   );
+});
+
+test("encoding", async () => {
+  expect(await matchRoute([{ path: ":a", component: async ({ a }) => <div>{a}</div> }], link`/${"/æøå"}`.substring(1))).toEqual(<div>/æøå</div>);
 });

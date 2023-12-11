@@ -1,5 +1,5 @@
 export const link = (strings: TemplateStringsArray, ...values: any[]) => {
-  const s = String.raw({ raw: strings }, ...values);
+  const s = String.raw({ raw: strings }, ...values.map(encodeURIComponent));
 
   if (s.startsWith("~")) {
     const id = document.location.hash.split("/")[1];

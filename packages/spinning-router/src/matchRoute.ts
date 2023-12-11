@@ -11,7 +11,7 @@ const doMatchRoute: (routes: Routes, path: string[], parentParameters: Parameter
       let match = true;
       for (let i in rPath) {
         if (rPath[i].startsWith(":")) {
-          parameters[rPath[i].substring(1)] = path[i];
+          parameters[rPath[i].substring(1)] = decodeURIComponent(path[i]);
         } else {
           if (rPath[i] != path[i]) {
             match = false;
