@@ -17,19 +17,21 @@ export const SpinningRouter: React.FC<{
   const [hash, setHash] = useState(() => location.hash.substring(1));
   const [element, setElement] = useState<any>(undefined);
   const [overlay, setOverlay] = useState<any>(undefined);
+  const [parameters, setParameters] = useState<{ [key: string]: string }>({});
   const invokeRoute = async (path: string) => {
     setOverlay(loadingIndicator);
     try {
-      const element = await matchRoute(routes, path);
-      setElement(element);
-      if (element) {
-        setElement(element);
+      const match = await matchRoute(routes, path);
+      if (match) {
+        setElement(match.element);
+        setParameters(match.parameters);
       } else {
         setElement(notFoundPage);
+        setParameters({});
       }
     } catch (error) {
-      console.log(error);
       setElement(errorPage({ error }));
+      setParameters({});
     } finally {
       setOverlay(undefined);
     }
@@ -51,7 +53,7 @@ export const SpinningRouter: React.FC<{
   }, []);
 
   return (
-    <Location.Provider value={{ path: hash, match: "", params: {} }}>
+    <Location.Provider value={{ path: hash, match: "", parameters }}>
       {element}
       {overlay}
     </Location.Provider>

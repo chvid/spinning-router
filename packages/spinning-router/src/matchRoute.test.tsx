@@ -42,9 +42,9 @@ const routes = [
 ] satisfies Routes;
 
 test("routes", async () => {
-  expect(await matchRoute(routes, "")).toEqual(<div>root</div>);
-  expect(await matchRoute(routes, "/")).toEqual(<div>root</div>);
-  expect(await matchRoute(routes, "/42/settings")).toEqual(
+  expect((await matchRoute(routes, ""))?.element).toEqual(<div>root</div>);
+  expect((await matchRoute(routes, "/"))?.element).toEqual(<div>root</div>);
+  expect((await matchRoute(routes, "/42/settings"))?.element).toEqual(
     <div>
       <div>settings</div>
     </div>
@@ -53,20 +53,22 @@ test("routes", async () => {
 
 test("parameters", async () => {
   expect(
-    await matchRoute(
-      [
-        {
-          path: ":a/:b",
-          component: async ({ a, b }) => (
-            <div>
-              <span>{a}</span>
-              <span>{b}</span>
-            </div>
-          )
-        }
-      ],
-      "/42/87"
-    )
+    (
+      await matchRoute(
+        [
+          {
+            path: ":a/:b",
+            component: async ({ a, b }) => (
+              <div>
+                <span>{a}</span>
+                <span>{b}</span>
+              </div>
+            )
+          }
+        ],
+        "/42/87"
+      )
+    )?.element
   ).toEqual(
     <div>
       <span>42</span>
@@ -76,5 +78,5 @@ test("parameters", async () => {
 });
 
 test("encoding", async () => {
-  expect(await matchRoute([{ path: ":a", component: async ({ a }) => <div>{a}</div> }], link`/${"/æøå"}`.substring(1))).toEqual(<div>/æøå</div>);
+  expect((await matchRoute([{ path: ":a", component: async ({ a }) => <div>{a}</div> }], link`/${"/æøå"}`.substring(1)))?.element).toEqual(<div>/æøå</div>);
 });
