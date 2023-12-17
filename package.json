@@ -3,9 +3,10 @@
   "scripts": {
     "test-coverage": "jest --coverage --roots packages/spinning-router/src",
     "test-watch": "jest --watch --roots packages/spinning-router/src",
-    "prettier": "prettier --write packages/spinning-router/src packages/spinning-router/package.json",
+    "prettier": "prettier --write packages/spinning-router/src packages/spinning-router/package.json examples/basics/src examples/basics/package.json",
     "test": "cd packages/spinning-router && jest",
     "build": "cd packages/spinning-router/src && tsc",
+    "link": "cd packages/spinning-router && npm link && cd ../../examples/basics && npm link spinning-router",
     "publish": "npm run build && cd packages/spinning-router && npm publish"
   },
   "prettier": {
