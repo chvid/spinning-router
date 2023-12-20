@@ -5,8 +5,10 @@
     "test-watch": "jest --watch --roots packages/spinning-router/src",
     "prettier": "prettier --write packages/spinning-router/src packages/spinning-router/package.json examples/basics/src examples/basics/package.json",
     "test": "cd packages/spinning-router && jest",
-    "build": "cd packages/spinning-router/src && tsc",
-    "link": "cd packages/spinning-router && npm link && cd ../../examples/basics && npm link spinning-router",
+    "build": "cd packages/spinning-router && tsc",
+    "link": "cd examples/basics && npm link ../../packages/spinning-router",
+    "unlink": "cd examples/basics && npm unlink spinning-router && npm install",
+    "build-and-copy": "npm run build && rm -rf examples/basics/node_modules/spinning-router && mkdir examples/basics/node_modules/spinning-router && cp packages/spinning-router/package.json examples/basics/node_modules/spinning-router && cp -r packages/spinning-router/dist examples/basics/node_modules/spinning-router/dist",
     "publish": "npm run build && cd packages/spinning-router && npm publish"
   },
   "prettier": {

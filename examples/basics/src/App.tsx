@@ -1,4 +1,5 @@
-import { SpinningRouter, Routes, link } from "spinning-router";
+import { useContext } from "react";
+import { SpinningRouter, Routes, Location, link } from "spinning-router";
 
 const DELAY = 500;
 
@@ -39,8 +40,8 @@ const IndexPage: React.FC<{ overview: PageOverview[] }> = ({ overview }) => (
   <div>
     <h1>Index</h1>
     <ul>
-      {overview.map(d => (
-        <li>
+      {overview.map((d, i) => (
+        <li key={i}>
           <a href={link`/${d.id}`}>{d.title}</a>
         </li>
       ))}
@@ -48,15 +49,21 @@ const IndexPage: React.FC<{ overview: PageOverview[] }> = ({ overview }) => (
   </div>
 );
 
-const DetailsPage: React.FC<{ details: PageDetails }> = ({ details }) => (
-  <div>
-    <h1>{details.title}</h1>
-    <p>{details.body}</p>
-    <p>
-      <a href={link`/`}>To index</a>.
-    </p>
-  </div>
-);
+const DetailsPage: React.FC<{ details: PageDetails }> = ({ details }) => {
+  const location = useContext(Location);
+  return (
+    <div>
+      <h1>{details.title}</h1>
+      <p>{details.body}</p>
+      <p>
+        <a href={link`/`}>To index</a>.
+      </p>
+      <p>
+        Parameters are: {JSON.stringify(location)}
+      </p>
+    </div>
+  )
+};
 
 const routes = [
   { path: "/", component: async () => <IndexPage overview={await api.loadOverview()} /> },
