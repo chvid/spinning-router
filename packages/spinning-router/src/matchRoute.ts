@@ -6,32 +6,45 @@ type Match = {
   element: JSX.Element;
 };
 
-const doMatchRoute: (routes: Routes, path: string[], parameters: { [key: string]: string }) => Promise<Match | undefined> = async (
+const doMatchRoute: (routes: Routes, querySplitted: string[], parameters: { [key: string]: string }) => Promise<Match | undefined> = async (
   routes,
-  path,
+  querySplitted,
   parameters
 ) => {
   for (let r of routes) {
-    const rPath = r.path.split("/").filter(e => e != "");
+    const pathSplitted = r.path.split("/").filter(e => e != "");
 
-    if ((r.routes && rPath.length <= path.length) || rPath.length == path.length) {
-      if (rPath.every((e, i) => e.startsWith(":") || e == path[i])) {
+    if ((r.routes && pathSplitted.length <= querySplitted.length) || pathSplitted.length == querySplitted.length) {
+      if (pathSplitted.every((e, i) => e.startsWith(":") || e == querySplitted[i])) {
         parameters = {
           ...parameters,
-          ...Object.fromEntries(rPath.filter(e => e.startsWith(":")).map((e, i) => [e.substring(1), decodeURIComponent(path[i])]))
+          ...Object.fromEntries(pathSplitted.filter(e => e.startsWith(":")).map((e, i) => [e.substring(1), decodeURIComponent(querySplitted[i])]))
         };
-        let subRoute = r.routes ? await doMatchRoute(r.routes, path.slice(rPath.length), parameters) : undefined;
-        return r.component ? { element: await r.component!({ ...parameters, children: subRoute?.element }), path: "", parameters: {} } : subRoute;
+
+        if (r.routes) {
+          let subRoute = await doMatchRoute(r.routes, querySplitted.slice(pathSplitted.length), parameters);
+          return {
+            element: r.component ? await r.component({ ...parameters, children: subRoute.element }) : subRoute.element,
+            path: r.path + "/" + subRoute.path,
+            parameters: subRoute.parameters
+          };
+        } else {
+          return {
+            element: r.component ? await r.component({ ...parameters }) : undefined,
+            path: r.path,
+            parameters
+          };
+        }
       }
     }
   }
   return undefined;
 };
 
-export const matchRoute: (routes: Routes, path: string) => Promise<Match | undefined> = async (routes, path) => {
+export const matchRoute: (routes: Routes, query: string) => Promise<Match | undefined> = async (routes, query) => {
   return await doMatchRoute(
     routes,
-    path.split("/").filter(e => e != ""),
+    query.split("/").filter(e => e != ""),
     {}
   );
 };

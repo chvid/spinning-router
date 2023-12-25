@@ -58,11 +58,9 @@ const DetailsPage: React.FC<{ details: PageDetails }> = ({ details }) => {
       <p>
         <a href={link`/`}>To index</a>.
       </p>
-      <p>
-        Parameters are: {JSON.stringify(location)}
-      </p>
+      <p>Parameters are: {JSON.stringify(location)}</p>
     </div>
-  )
+  );
 };
 
 const routes = [

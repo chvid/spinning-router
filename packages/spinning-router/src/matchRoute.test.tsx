@@ -53,28 +53,29 @@ test("routes", async () => {
 
 test("parameters", async () => {
   expect(
-    (
-      await matchRoute(
-        [
-          {
-            path: ":a/:b",
-            component: async ({ a, b }) => (
-              <div>
-                <span>{a}</span>
-                <span>{b}</span>
-              </div>
-            )
-          }
-        ],
-        "/42/87"
-      )
-    )?.element
-  ).toEqual(
-    <div>
-      <span>42</span>
-      <span>87</span>
-    </div>
-  );
+    await matchRoute(
+      [
+        {
+          path: ":a/:b",
+          component: async ({ a, b }) => (
+            <div>
+              <span>{a}</span>
+              <span>{b}</span>
+            </div>
+          )
+        }
+      ],
+      "/42/87"
+    )
+  ).toEqual({
+    element: (
+      <div>
+        <span>42</span><span>87</span>
+      </div>
+    ),
+    parameters: { a: "42", b: "87" },
+    path: ":a/:b"
+  });
 });
 
 test("encoding", async () => {
