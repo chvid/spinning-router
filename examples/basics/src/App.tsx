@@ -36,9 +36,33 @@ const api = {
   }
 };
 
+const AnotherLongPage: React.FC = () => (
+  <div>
+    <h1>Another Long Page</h1>
+    {new Array(42).fill(0).map((_, i) => (
+      <p key={i}>bar</p>
+    ))}
+    <p>
+      Link to <a href={link`/`}>home</a>.
+    </p>
+  </div>
+);
+
+const LongPage: React.FC = () => (
+  <div>
+    <h1>Long Page</h1>
+    {new Array(42).fill(0).map((_, i) => (
+      <p key={i}>foo</p>
+    ))}
+    <p>
+      Link to <a href={link`/another-long-page`}>another long page</a>.
+    </p>
+  </div>
+);
+
 const IndexPage: React.FC<{ overview: PageOverview[] }> = ({ overview }) => (
   <div>
-    <h1>Index</h1>
+    <h1>Index {DELAY}</h1>
     <ul>
       {overview.map((d, i) => (
         <li key={i}>
@@ -46,6 +70,9 @@ const IndexPage: React.FC<{ overview: PageOverview[] }> = ({ overview }) => (
         </li>
       ))}
     </ul>
+    <p>
+      Page <a href={link`/long-page`}>that is very long</a>.
+    </p>
   </div>
 );
 
@@ -65,6 +92,8 @@ const DetailsPage: React.FC<{ details: PageDetails }> = ({ details }) => {
 
 const routes = [
   { path: "/", component: async () => <IndexPage overview={await api.loadOverview()} /> },
+  { path: "/long-page", component: async () => <LongPage /> },
+  { path: "/another-long-page", component: async () => <AnotherLongPage /> },
   { path: "/:id", component: async ({ id }) => <DetailsPage details={await api.loadDetails(id)} /> }
 ] satisfies Routes;
 

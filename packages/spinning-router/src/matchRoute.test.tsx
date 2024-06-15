@@ -70,7 +70,8 @@ test("parameters", async () => {
   ).toEqual({
     element: (
       <div>
-        <span>42</span><span>87</span>
+        <span>42</span>
+        <span>87</span>
       </div>
     ),
     parameters: { a: "42", b: "87" },

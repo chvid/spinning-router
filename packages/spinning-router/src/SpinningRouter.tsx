@@ -29,7 +29,9 @@ export const SpinningRouter: React.FC<{
         setElement(notFoundPage);
         setParameters({});
       }
+      window.scrollTo(0, 0);
     } catch (error) {
+      window.scrollTo(0, 0);
       setElement(errorPage({ error }));
       setParameters({});
     } finally {
