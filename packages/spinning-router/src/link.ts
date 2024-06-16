@@ -1,18 +1,13 @@
-export const link = (strings: TemplateStringsArray, ...values: any[]) => {
-  const s = String.raw({ raw: strings }, ...values.map(encodeURIComponent));
+export const link = (path: string, values: { [key: string]: string | number } = {}) => {
+  let result = [];
 
-  if (s.startsWith("~")) {
-    const id = document.location.hash.split("/")[1];
-    if (id) {
-      return `#/${id}${s.substring(1)}`;
+  for (let part of path.split("/")) {
+    if (part.startsWith(":")) {
+      result.push(encodeURIComponent(values[part.substring(1)]));
     } else {
-      return `#${s.substring(1)}`;
+      result.push(part);
     }
   }
 
-  if (s.startsWith("/")) {
-    return "#" + s;
-  } else {
-    return "#/" + s;
-  }
+  return "#" + result.join("/");
 };

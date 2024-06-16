@@ -1,5 +1,5 @@
 import { link } from "./link";
 
-export const navigate = (strings: TemplateStringsArray, ...values: any[]) => {
-  window.location.hash = link(strings, ...values);
+export const navigate = (path: string, values: { [key: string]: string | number } = {}) => {
+  window.location.hash = link(path, values);
 };

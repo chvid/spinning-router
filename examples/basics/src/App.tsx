@@ -43,7 +43,7 @@ const AnotherLongPage: React.FC = () => (
       <p key={i}>bar</p>
     ))}
     <p>
-      Link to <a href={link`/`}>home</a>.
+      Link to <a href={link("/")}>home</a>.
     </p>
   </div>
 );
@@ -55,7 +55,7 @@ const LongPage: React.FC = () => (
       <p key={i}>foo</p>
     ))}
     <p>
-      Link to <a href={link`/another-long-page`}>another long page</a>.
+      Link to <a href={link("/another-long-page")}>another long page</a>.
     </p>
   </div>
 );
@@ -66,12 +66,12 @@ const IndexPage: React.FC<{ overview: PageOverview[] }> = ({ overview }) => (
     <ul>
       {overview.map((d, i) => (
         <li key={i}>
-          <a href={link`/${d.id}`}>{d.title}</a>
+          <a href={link("/:id", { id: d.id })}>{d.title}</a>
         </li>
       ))}
     </ul>
     <p>
-      Page <a href={link`/long-page`}>that is very long</a>.
+      Page <a href={link("/long-page")}>that is very long</a>.
     </p>
   </div>
 );
@@ -83,7 +83,7 @@ const DetailsPage: React.FC<{ details: PageDetails }> = ({ details }) => {
       <h1>{details.title}</h1>
       <p>{details.body}</p>
       <p>
-        <a href={link`/`}>To index</a>.
+        <a href={link("/")}>To index</a>.
       </p>
       <p>Parameters are: {JSON.stringify(location)}</p>
     </div>

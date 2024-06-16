@@ -80,5 +80,7 @@ test("parameters", async () => {
 });
 
 test("encoding", async () => {
-  expect((await matchRoute([{ path: ":a", component: async ({ a }) => <div>{a}</div> }], link`/${"/æøå"}`.substring(1)))?.element).toEqual(<div>/æøå</div>);
+  expect((await matchRoute([{ path: ":a", component: async ({ a }) => <div>{a}</div> }], link("/:id", { id: "/æøå" }).substring(1)))?.element).toEqual(
+    <div>/æøå</div>
+  );
 });
