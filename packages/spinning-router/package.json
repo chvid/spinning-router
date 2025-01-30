@@ -1,6 +1,6 @@
 {
   "name": "spinning-router",
-  "version": "0.0.2-beta",
+  "version": "0.0.2",
   "description": "n/a",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
