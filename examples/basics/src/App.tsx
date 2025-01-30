@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SpinningRouter, Routes, Location, link } from "spinning-router";
+import { SpinningRouter, Routes, Location, link, Register } from "spinning-router";
 
 const DELAY = 500;
 
@@ -62,7 +62,8 @@ const LongPage: React.FC = () => (
 
 const IndexPage: React.FC<{ overview: PageOverview[] }> = ({ overview }) => (
   <div>
-    <h1>Index {DELAY}</h1>
+    <h1>Index</h1>
+    <p>Simulating a slow server with delay of {DELAY} ms.</p>
     <ul>
       {overview.map((d, i) => (
         <li key={i}>
@@ -95,6 +96,12 @@ const routes = [
   { path: "/long-page", component: async () => <LongPage /> },
   { path: "/another-long-page", component: async () => <AnotherLongPage /> },
   { path: "/:id", component: async ({ id }) => <DetailsPage details={await api.loadDetails(id)} /> }
-] satisfies Routes;
+] as const satisfies Routes;
 
 export const App = () => <SpinningRouter routes={routes}></SpinningRouter>;
+
+declare module "spinning-router" {
+  interface Register {
+    routes: typeof routes;
+  }
+}
