@@ -8,24 +8,19 @@ import { link } from "./link";
 
 const routes = [
   {
-    path: "",
+    path: "/",
     component: async () => <div>root</div>
   },
   {
-    path: ":id",
+    path: "/:id",
     component: async ({ id, children }: any) => <div>{children}</div>,
     routes: [
       {
-        path: "settings",
-        routes: [
-          {
-            path: "",
-            component: async () => <div>settings</div>
-          }
-        ]
+        path: "/settings",
+        component: async () => <div>settings</div>
       },
       {
-        path: "sales",
+        path: "/sales",
         routes: [
           {
             path: "invoices",
@@ -39,7 +34,17 @@ const routes = [
       }
     ]
   }
-] satisfies Routes;
+] as const satisfies Routes;
+
+declare module "./Routes" {
+  interface Register {
+    routes: typeof routes;
+  }
+}
+
+test("link", () => {
+  expect(link("/:id/settings", { id: 42 })).toEqual("#/42/settings");
+});
 
 test("routes", async () => {
   expect((await matchRoute(routes, ""))?.element).toEqual(<div>root</div>);

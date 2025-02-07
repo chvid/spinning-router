@@ -1,6 +1,5 @@
 import { useContext } from "react";
-import { SpinningRouter, Routes, Location, link } from "spinning-router";
-import { unsafeLink } from "spinning-router/dist/link";
+import { SpinningRouter, Routes, Location, link, unsafeLink } from "spinning-router";
 
 const DELAY = 500;
 

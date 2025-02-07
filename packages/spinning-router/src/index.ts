@@ -1,4 +1,5 @@
 export { link } from "./link";
+export { unsafeLink } from "./link";
 export { navigate } from "./navigate";
 export { AsyncComponent, Route, Routes, Path, Register } from "./Routes";
 export { softRefresh } from "./softRefresh";
