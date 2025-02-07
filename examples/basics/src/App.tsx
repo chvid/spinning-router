@@ -1,5 +1,6 @@
 import { useContext } from "react";
-import { SpinningRouter, Routes, Location, link, Register } from "spinning-router";
+import { SpinningRouter, Routes, Location, link } from "spinning-router";
+import { unsafeLink } from "spinning-router/dist/link";
 
 const DELAY = 500;
 
@@ -32,7 +33,12 @@ const api = {
 
   async loadDetails(id: number) {
     await wait(DELAY);
-    return data.find(d => d.id == id)!;
+    const result = data.find(d => d.id == id);
+    if (result) {
+      return result;
+    } else {
+      throw new Error(`Id ${id} not found`);
+    }
   }
 };
 
@@ -43,7 +49,7 @@ const AnotherLongPage: React.FC = () => (
       <p key={i}>bar</p>
     ))}
     <p>
-      Link to <a href={link("/")}>home</a>.
+      Link to <a href={link("/", {})}>home</a>.
     </p>
   </div>
 );
@@ -55,7 +61,7 @@ const LongPage: React.FC = () => (
       <p key={i}>foo</p>
     ))}
     <p>
-      Link to <a href={link("/another-long-page")}>another long page</a>.
+      Link to <a href={link("/another-long-page", {})}>another long page</a>.
     </p>
   </div>
 );
@@ -67,12 +73,18 @@ const IndexPage: React.FC<{ overview: PageOverview[] }> = ({ overview }) => (
     <ul>
       {overview.map((d, i) => (
         <li key={i}>
-          <a href={link("/:id", { id: d.id })}>{d.title}</a>
+          <a href={link("/details/:id", { id: d.id })}>{d.title}</a>
         </li>
       ))}
     </ul>
     <p>
-      Page <a href={link("/long-page")}>that is very long</a>.
+      Page <a href={link("/long-page", {})}>that is very long</a>.
+    </p>
+    <p>
+      Page that triggers an error <a href={link("/details/:id", { id: 99 })}>error</a>.
+    </p>
+    <p>
+      Page that does exist <a href={unsafeLink("/this-page-doesnt-exist")}>404 - not found</a>.
     </p>
   </div>
 );
@@ -84,7 +96,7 @@ const DetailsPage: React.FC<{ details: PageDetails }> = ({ details }) => {
       <h1>{details.title}</h1>
       <p>{details.body}</p>
       <p>
-        <a href={link("/")}>To index</a>.
+        <a href={link("/", {})}>To index</a>.
       </p>
       <p>Parameters are: {JSON.stringify(location)}</p>
     </div>
@@ -95,7 +107,7 @@ const routes = [
   { path: "/", component: async () => <IndexPage overview={await api.loadOverview()} /> },
   { path: "/long-page", component: async () => <LongPage /> },
   { path: "/another-long-page", component: async () => <AnotherLongPage /> },
-  { path: "/:id", component: async ({ id }) => <DetailsPage details={await api.loadDetails(id)} /> }
+  { path: "/details/:id", component: async ({ id }) => <DetailsPage details={await api.loadDetails(id)} /> }
 ] as const satisfies Routes;
 
 export const App = () => <SpinningRouter routes={routes}></SpinningRouter>;

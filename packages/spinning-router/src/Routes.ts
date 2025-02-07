@@ -23,3 +23,13 @@ export type Path = AllPaths<
     ? Routes
     : never
 >;
+
+type SplitPathSegments<S extends string, Delimiter extends string = "/", Parts extends string[] = []> = S extends `${infer Head}${Delimiter}${infer Tail}`
+  ? SplitPathSegments<Tail, Delimiter, [...Parts, Head]>
+  : [...Parts, S];
+
+type FilterColonParams<T> = T extends `:${infer Param}` ? Param : never;
+
+type PathParameterName<P extends Path> = FilterColonParams<SplitPathSegments<P>[number]>;
+
+export type PathParameters<P extends Path> = { [key in PathParameterName<P>]: string | number };

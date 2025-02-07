@@ -1,6 +1,6 @@
 import { link } from "./link";
-import { Path } from "./Routes";
+import { Path, PathParameters } from "./Routes";
 
-export const navigate = (path: Path, values: { [key: string]: string | number } = {}) => {
+export const navigate = <P extends Path>(path: P, values: PathParameters<P>) => {
   window.location.hash = link(path, values);
 };

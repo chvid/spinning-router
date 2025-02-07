@@ -1,6 +1,6 @@
-import { Path } from "./Routes";
+import { Path, PathParameters } from "./Routes";
 
-export const link = (path: Path, values: { [key: string]: string | number } = {}) => {
+export const unsafeLink = (path: string, values?: any) => {
   let result = [];
 
   for (let part of (path as string).split("/")) {
@@ -13,3 +13,5 @@ export const link = (path: Path, values: { [key: string]: string | number } = {}
 
   return "#" + result.join("/");
 };
+
+export const link: <P extends Path>(path: P, values: PathParameters<P>) => string = unsafeLink;

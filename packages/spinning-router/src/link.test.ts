@@ -1,5 +1,5 @@
-import { link } from "./link";
+import { unsafeLink } from "./link";
 
 test("link", async () => {
-  expect(link("/foo/:baz", { baz: 42 })).toEqual("#/foo/42");
+  expect(unsafeLink("/foo/:baz", { baz: 42 })).toEqual("#/foo/42");
 });
