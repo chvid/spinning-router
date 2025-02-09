@@ -18,7 +18,12 @@ const doMatchRoute: (routes: Routes, querySplitted: string[], parameters: { [key
       if (pathSplitted.every((e, i) => e.startsWith(":") || e == querySplitted[i])) {
         parameters = {
           ...parameters,
-          ...Object.fromEntries(pathSplitted.filter(e => e.startsWith(":")).map((e, i) => [e.substring(1), decodeURIComponent(querySplitted[i])]))
+          ...Object.fromEntries(
+            pathSplitted
+              .map((pathPart, i) => ({ pathPart, queryPath: querySplitted[i] }))
+              .filter(({ pathPart }) => pathPart.startsWith(":"))
+              .map(({ pathPart, queryPath }) => [pathPart.substring(1), decodeURIComponent(queryPath)])
+          )
         };
 
         if (r.routes) {
