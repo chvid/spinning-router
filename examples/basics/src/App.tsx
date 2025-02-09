@@ -48,7 +48,7 @@ const AnotherLongPage: React.FC = () => (
       <p key={i}>bar</p>
     ))}
     <p>
-      Link to <a href={link("/", {})}>home</a>.
+      Link to <a href={link("/")}>home</a>.
     </p>
   </div>
 );
@@ -60,7 +60,7 @@ const LongPage: React.FC = () => (
       <p key={i}>foo</p>
     ))}
     <p>
-      Link to <a href={link("/another-long-page", {})}>another long page</a>.
+      Link to <a href={link("/another-long-page")}>another long page</a>.
     </p>
   </div>
 );
@@ -77,7 +77,7 @@ const IndexPage: React.FC<{ overview: PageOverview[] }> = ({ overview }) => (
       ))}
     </ul>
     <p>
-      Page <a href={link("/long-page", {})}>that is very long</a>.
+      Page <a href={link("/long-page")}>that is very long</a>.
     </p>
     <p>
       Page that triggers an error <a href={link("/details/:id", { id: 99 })}>error</a>.
@@ -97,6 +97,26 @@ const DetailsPage: React.FC<{ details: PageDetails }> = ({ details }) => {
       <p>
         <a href={link("/", {})}>To index</a>.
       </p>
+      <p>
+        <a href={link("/edit/:id")}>To edit page</a>.
+      </p>
+      <p>Parameters are: {JSON.stringify(location)}</p>
+    </div>
+  );
+};
+
+const EditPage: React.FC<{ details: PageDetails }> = ({ details }) => {
+  const location = useContext(Location);
+  return (
+    <div>
+      <h1>{details.title}</h1>
+      <p>{details.body}</p>
+      <p>
+        <a href={link("/", {})}>To index</a>.
+      </p>
+      <p>
+        <a href={link("/details/:id")}>To details page</a>.
+      </p>
       <p>Parameters are: {JSON.stringify(location)}</p>
     </div>
   );
@@ -106,7 +126,8 @@ const routes = [
   { path: "/", component: async () => <IndexPage overview={await api.loadOverview()} /> },
   { path: "/long-page", component: async () => <LongPage /> },
   { path: "/another-long-page", component: async () => <AnotherLongPage /> },
-  { path: "/details/:id", component: async ({ id }) => <DetailsPage details={await api.loadDetails(id)} /> }
+  { path: "/details/:id", component: async ({ id }) => <DetailsPage details={await api.loadDetails(id)} /> },
+  { path: "/edit/:id", component: async ({ id }) => <EditPage details={await api.loadDetails(id)} /> }
 ] as const satisfies Routes;
 
 export const App = () => <SpinningRouter routes={routes}></SpinningRouter>;

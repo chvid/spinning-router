@@ -32,4 +32,4 @@ type FilterColonParams<T> = T extends `:${infer Param}` ? Param : never;
 
 type PathParameterName<P extends Path> = FilterColonParams<SplitPathSegments<P>[number]>;
 
-export type PathParameters<P extends Path> = { [key in PathParameterName<P>]: string | number };
+export type PathParameters<P extends Path> = { [key in PathParameterName<P>]?: string | number };
