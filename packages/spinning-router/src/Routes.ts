@@ -1,4 +1,4 @@
-export type AsyncComponent = (parameters: { [key: string]: string }) => Promise<JSX.Element>;
+export type AsyncComponent = (parameters: any) => Promise<JSX.Element>;
 export type Route = {
   path: string;
   routes?: Routes;
