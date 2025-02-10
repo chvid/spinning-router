@@ -23,11 +23,11 @@ const routes = [
         path: "/sales",
         routes: [
           {
-            path: "invoices",
+            path: "/invoices",
             component: async () => <div>invoices</div>
           },
           {
-            path: "customers",
+            path: "/customers",
             component: async () => <div>customers</div>
           }
         ]
@@ -61,7 +61,7 @@ test("parameters", async () => {
     await matchRoute(
       [
         {
-          path: ":a/:b",
+          path: "/:a/:b",
           component: async ({ a, b }) => (
             <div>
               <span>{a}</span>
@@ -80,7 +80,7 @@ test("parameters", async () => {
       </div>
     ),
     parameters: { a: "42", b: "87" },
-    path: ":a/:b"
+    path: "/:a/:b"
   });
 });
 
