@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { SpinningRouter, Routes, Location, link, unsafeLink } from "spinning-router";
+import { useContext, useEffect } from "react";
+import { SpinningRouter, Routes, Location, link, unsafeLink, softRefresh } from "spinning-router";
 
 const DELAY = 500;
 
@@ -85,6 +85,9 @@ const IndexPage: React.FC<{ overview: PageOverview[] }> = ({ overview }) => (
     <p>
       Page that does exist <a href={unsafeLink("/this-page-doesnt-exist")}>404 - not found</a>.
     </p>
+    <p>
+      Page that does <a href={link("/soft-refreshing")}>soft refreshing in a loop</a>.
+    </p>
   </div>
 );
 
@@ -122,12 +125,39 @@ const EditPage: React.FC<{ details: PageDetails }> = ({ details }) => {
   );
 };
 
+const SoftRefreshingPage: React.FC<{ details: PageDetails }> = ({ details }) => {
+  const location = useContext(Location);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (data[0].title == "Foo") {
+        data[0].title = "Bar";
+      } else {
+        data[0].title = "Foo";
+      }
+      softRefresh();
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+  return (
+    <div>
+      <h1>{details.title}</h1>
+      <p>{details.body}</p>
+      <p>
+        <a href={link("/", {})}>To index</a>.
+      </p>
+      <p>Parameters are: {JSON.stringify(location)}</p>
+    </div>
+  );
+};
 const routes = [
   { path: "/", component: async () => <IndexPage overview={await api.loadOverview()} /> },
   { path: "/long-page", component: async () => <LongPage /> },
   { path: "/another-long-page", component: async () => <AnotherLongPage /> },
   { path: "/details/:id", component: async ({ id }) => <DetailsPage details={await api.loadDetails(id)} /> },
-  { path: "/edit/:id", component: async ({ id }) => <EditPage details={await api.loadDetails(id)} /> }
+  { path: "/edit/:id", component: async ({ id }) => <EditPage details={await api.loadDetails(id)} /> },
+  { path: "/soft-refreshing", component: async () => <SoftRefreshingPage details={await api.loadDetails(42)} /> }
 ] as const satisfies Routes;
 
 export const App = () => <SpinningRouter routes={routes}></SpinningRouter>;
