@@ -1,6 +1,4 @@
 import { Path, PathParameters } from "./Routes";
-import { Location } from "./Location";
-import { useContext } from "react";
 
 export const unsafeLink = (path: string, values?: any) => {
   let result = [];
@@ -8,7 +6,7 @@ export const unsafeLink = (path: string, values?: any) => {
   for (let part of (path as string).split("/")) {
     if (part.startsWith(":")) {
       const key = part.substring(1);
-      let value = values && values[key] !== undefined ? values[key] : useContext(Location).parameters[key];
+      let value = values && values[key] !== undefined ? values[key] : (window as any).SpinningRouterLocation.parameters[key];
       result.push(encodeURIComponent(value));
     } else {
       result.push(part);

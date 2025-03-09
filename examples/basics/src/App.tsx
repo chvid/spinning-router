@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { SpinningRouter, Routes, Location, link, unsafeLink, softRefresh } from "spinning-router";
+import { SpinningRouter, Routes, Location, link, unsafeLink, softRefresh, navigate } from "spinning-router";
 
 const DELAY = 500;
 
@@ -102,6 +102,9 @@ const DetailsPage: React.FC<{ details: PageDetails }> = ({ details }) => {
       </p>
       <p>
         <a href={link("/edit/:id")}>To edit page</a>.
+      </p>
+      <p>
+        <button onClick={() => navigate("/edit/:id")}>Link via button</button>
       </p>
       <p>Parameters are: {JSON.stringify(location)}</p>
     </div>

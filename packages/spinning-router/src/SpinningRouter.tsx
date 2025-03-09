@@ -68,8 +68,10 @@ export const SpinningRouter: React.FC<{
     };
   }, []);
 
+  (window as any).SpinningRouterLocation = { path, match, parameters };
+
   return (
-    <Location.Provider value={{ path, match, parameters }}>
+    <Location.Provider value={{ ...(window as any).SpinningRouterLocation }}>
       {element}
       {overlay}
     </Location.Provider>
